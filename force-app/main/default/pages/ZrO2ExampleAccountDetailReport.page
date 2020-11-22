@@ -1,0 +1,66 @@
+<!---
+Copyright (c) 2020 Shellyl_N and Authors
+license: MIT
+https://github.com/shellyln
+--><apex:page docType="html-5.0"
+    standardController="Account" extensions="ZrO2VfDetailReportControllerExt"
+    tabStyle="Account"
+    standardStylesheets="false">
+<c:ZrO2VfReportRendererCmp />
+
+<div style="display: none;">
+    <apex:pageBlock title="Detail">
+        <apex:outputField value="{! Account.Name }"/>
+        <apex:outputField value="{! Account.BillingCountry }"/>
+        <apex:outputField value="{! Account.BillingState }"/>
+        <apex:outputField value="{! Account.BillingCity }"/>
+        <apex:outputField value="{! Account.BillingStreet }"/>
+        <apex:outputField value="{! Account.BillingPostalCode }"/>
+        <apex:outputField value="{! Account.Phone }"/>
+    </apex:pageBlock>
+</div>
+
+<script>
+/**
+ * @type {{
+ *     data: {
+ *         attributes: {
+ *             type: string, // object API name
+ *             url: string,
+ *         },
+ *         [propName: string]: number | string | null,
+ *     },
+ * }}
+ */
+const controllerRecord = {!RecordJSON};
+
+(async () => {
+    const resourcePath = await getResourceURL('ZrO2ReportExamples');
+    const resp = await fetch(`${resourcePath}/${'example-vf-detail.md'}`);
+    const reportDef = await resp.text();
+
+    await renderReport(
+        reportDef,
+        controllerRecord.data,
+        {
+            commands: ['print', 'download', 'attach'],
+            recordId: controllerRecord.data.Id,
+            objectApiName: 'Account',
+            title: 'My detail report',
+            reportName: 'My detail report',
+            inputFormat: 'md',
+            rawInput: false,
+            dataFormat: 'object',
+        },
+    );
+
+    // Back to the caller view.
+    if (typeof sforce !== 'undefined' && sforce.one) {
+        sforce.one.back(true);
+    } else {
+        window.history.back();
+    }
+})();
+</script>
+
+</apex:page>

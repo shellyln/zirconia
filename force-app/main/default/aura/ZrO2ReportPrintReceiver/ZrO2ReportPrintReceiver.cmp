@@ -1,0 +1,5 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId">
+    <lightning:messageChannel type="ZrO2RefreshViewMessageChannel__c" aura:id="zrO2RefreshViewMessageChannel" onMessage="{!c.handleReceiveRefreshViewMessage}"/>
+    <lightning:messageChannel type="ZrO2ReportPrintMessageChannel__c" aura:id="zrO2ReportPrintMessageChannel" onMessage="{!c.handleReceiveReportPrintMessage}"/>
+    <c:ZrO2ReportRendererCore aura:id="childlwc"/>
+</aura:component>	

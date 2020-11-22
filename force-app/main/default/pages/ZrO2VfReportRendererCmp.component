@@ -1,0 +1,137 @@
+<!---
+Copyright (c) 2020 Shellyl_N and Authors
+license: MIT
+https://github.com/shellyln
+--><apex:component controller="ZrO2ReportRendererController">
+
+<apex:includeScript value="{!URLFOR($Resource.ZrO2Resources,'menneu_0_4_0/menneu.min.js')}"/>
+
+<script>
+{
+    window.getResourceURL = (resourceName) => {
+        const promise = new Promise((resolve, reject) => {
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.ZrO2ReportRendererController.getResourceURL}',
+                resourceName,
+                function(result, event){
+                    if (event.status) {
+                        resolve(result);
+                    } else if (event.type === 'exception') {
+                        resolve(event.message + event.where);
+                    } else {
+                        reject(event.message);
+                    }
+                }, 
+                {escape: true}
+            );
+        });
+        return promise;
+    };
+
+    window.getSingleStaticResourceContent = (resourceName) => {
+        const promise = new Promise((resolve, reject) => {
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.ZrO2ReportRendererController.getSingleStaticResourceContent}',
+                resourceName,
+                function(result, event){
+                    if (event.status) {
+                        resolve(result);
+                    } else if (event.type === 'exception') {
+                        resolve(event.message + event.where);
+                    } else {
+                        reject(event.message);
+                    }
+                }, 
+                {escape: false}
+            );
+        });
+        return promise;
+    };
+
+    const attachFile = (title, fileName, fileContent, id) => {
+        const promise = new Promise((resolve, reject) => {
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.ZrO2ReportRendererController.attachFile}',
+                title, fileName, fileContent, id,
+                function(result, event){
+                    if (event.status) {
+                        resolve(result);
+                    } else if (event.type === 'exception') {
+                        resolve(event.message + event.where);
+                    } else {
+                        reject(event.message);
+                    }
+                }, 
+                {escape: true}
+            );
+        });
+        return promise;
+    };
+
+    const downloadFile = (url, fileName) => {
+        let link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        link.click();
+    }
+
+    /**
+     * @param {string} reportDef
+     * @param {*} data
+     * @param {{
+     *     commands: ('print' | 'download' | 'attach')[],
+     *     recordId: string,
+     *     objectApiName: string,
+     *     title: string,
+     *     reportName: string,
+     *     inputFormat: 'md' | 'md-fragment' | 'lisp' | 'html',
+     *     rawInput: boolean,
+     *     dataFormat: 'object' | 'json' | 'lisp' }} options
+     * @returns {Promise<string>}
+     */
+    window.renderReport = async (reportDef, data, options) => {
+        const buf = await menneu.render(reportDef, JSON.parse(JSON.stringify(data)), {
+            replacementMacros: [{
+                re: /!!!lsx\s([\s\S]+?)!!!/g,
+                fn: 'lsx', // evaluate input as LSX script
+            }],
+            title: options.title ?? options.reportName ?? 'Untitled',
+            inputFormat: options.inputFormat ?? 'html',
+            rawInput: options.rawInput ?? false,
+            dataFormat: options.dataFormat ?? 'object',
+            outputFormat: 'html',
+        });
+
+        const content = buf.toString();
+
+        for (const command of options.commands ?? []) {
+            switch (command) {
+            case 'print':
+                {
+                    const url = URL.createObjectURL(new Blob([content], { type: 'text/html' }));
+                    window.open(url);
+                }
+                break;
+            case 'download':
+                {
+                    const url = URL.createObjectURL(new Blob([content], { type: 'text/html' }));
+                    downloadFile(url, `${options.reportName ?? 'Untitled'}.html`);
+                }
+                break;
+            case 'attach':
+                await attachFile(
+                    options.reportName ?? 'Untitled',
+                    `${options.reportName ?? 'Untitled'}.html`,
+                    content ?? '',
+                    options.recordId,
+                );
+                break;
+            }
+        }
+
+        return content;
+    }
+}
+</script>
+
+</apex:component>

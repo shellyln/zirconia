@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningMessageChannel xmlns="http://soap.sforce.com/2006/04/metadata">
+    <isExposed>true</isExposed>
+    <masterLabel>Sample Message Channel</masterLabel>
+    <lightningMessageFields>
+        <fieldName>reportDef</fieldName>
+    </lightningMessageFields>
+    <lightningMessageFields>
+        <fieldName>data</fieldName>
+    </lightningMessageFields>
+    <lightningMessageFields>
+        <fieldName>commands</fieldName>
+    </lightningMessageFields>
+    <lightningMessageFields>
+        <fieldName>recordId</fieldName>
+    </lightningMessageFields>
+    <lightningMessageFields>
+        <fieldName>objectApiName</fieldName>
+    </lightningMessageFields>
+    <lightningMessageFields>
+        <fieldName>title</fieldName>
+    </lightningMessageFields>
+    <lightningMessageFields>
+        <fieldName>reportName</fieldName>
+    </lightningMessageFields>
+    <lightningMessageFields>
+        <fieldName>inputFormat</fieldName>
+    </lightningMessageFields>
+    <lightningMessageFields>
+        <fieldName>rawInput</fieldName>
+    </lightningMessageFields>
+    <lightningMessageFields>
+        <fieldName>dataFormat</fieldName>
+    </lightningMessageFields>
+</LightningMessageChannel>

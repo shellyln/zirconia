@@ -1,0 +1,29 @@
+<!---
+Copyright (c) 2020 Shellyl_N and Authors
+license: MIT
+https://github.com/shellyln
+--><apex:page standardStylesheets="false" showHeader="false" sidebar="false" docType="html-5.0">
+<script>
+
+function downloadFile(url, fileName) {
+    let link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    link.click();
+}
+
+window.addEventListener('message', async (evt) => {
+    const url = URL.createObjectURL(new Blob([evt.data.content], { type: 'text/html' }));
+
+    switch (evt.data.command) {
+    case 'print':
+        window.open(url);
+        break;
+    case 'download':
+        downloadFile(url, evt.data.fileName);
+        break;
+    }
+}, false);
+
+</script>
+</apex:page>

@@ -1,0 +1,3 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId">
+    <lightning:messageChannel type="ZrO2RefreshViewMessageChannel__c" aura:id="zrO2RefreshViewMessageChannel" onMessage="{!c.handleReceiveMessage}"/>
+</aura:component>	

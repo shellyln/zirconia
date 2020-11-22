@@ -1,0 +1,81 @@
+<!---
+Copyright (c) 2020 Shellyl_N and Authors
+license: MIT
+https://github.com/shellyln
+--><apex:page docType="html-5.0"
+    standardController="Account" extensions="ZrO2VfListReportControllerExt"
+    recordSetVar="accounts" tabStyle="Account"
+    standardStylesheets="false">
+<c:ZrO2VfReportRendererCmp />
+
+<div style="display: none;">
+    <apex:pageBlock title="List">
+        <apex:pageBlockTable value="{! accounts }" var="rec">
+            <apex:column value="{! rec.Name }"/>
+            <apex:column value="{! rec.BillingCountry }"/>
+            <apex:column value="{! rec.BillingState }"/>
+            <apex:column value="{! rec.BillingCity }"/>
+            <apex:column value="{! rec.BillingStreet }"/>
+            <apex:column value="{! rec.BillingPostalCode }"/>
+            <apex:column value="{! rec.Phone }"/>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+</div>
+
+
+<script>
+/**
+ * @type {{
+ *     data: [{
+ *         attributes: {
+ *             type: string, // object API name
+ *             url: string,
+ *         },
+ *         [propName: string]: number | string | null,
+ *     }],
+ * }}
+ */
+const controllerAllRecords = {!AllRecordsJSON};
+/**
+ * @type {{
+ *     data: [{
+ *         attributes: {
+ *             type: string, // object API name
+ *             url: string,
+ *         },
+ *         [propName: string]: number | string | null,
+ *     }],
+ * }}
+ */
+const controllerSelectedRecords = {!SelectedRecordsJSON};
+
+(async () => {
+    const resourcePath = await getResourceURL('ZrO2ReportExamples');
+    const resp = await fetch(`${resourcePath}/${'example-vf-list.md'}`);
+    const reportDef = await resp.text();
+
+    await renderReport(
+        reportDef,
+        controllerAllRecords.data,
+        {
+            commands: ['print', 'download'],
+            recordId: null,
+            objectApiName: 'Account',
+            title: 'My list report',
+            reportName: 'My list report',
+            inputFormat: 'md',
+            rawInput: false,
+            dataFormat: 'object',
+        },
+    );
+
+    // Back to the caller view.
+    if (typeof sforce !== 'undefined' && sforce.one) {
+        sforce.one.back(true);
+    } else {
+        window.history.back();
+    }
+})();
+</script>
+
+</apex:page>
