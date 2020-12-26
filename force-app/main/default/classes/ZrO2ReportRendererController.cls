@@ -3,7 +3,7 @@
 // https://github.com/shellyln
 
 global with sharing class ZrO2ReportRendererController {
-    public ZrO2ReportRendererController() {
+    global ZrO2ReportRendererController() {
     }
 
     @TestVisible

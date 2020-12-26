@@ -123,7 +123,7 @@ See [https://github.com/shellyln/liyad#what-is-lsx](https://github.com/shellyln/
       ```
         * Turn on the `Scripting` switch
 
-## ⚙️ Set up a deployment and contribution environment
+## ⚙️ Setup a deployment and contribution environment
 
 ```bash
 git clone https://github.com/shellyln/zirconia.git

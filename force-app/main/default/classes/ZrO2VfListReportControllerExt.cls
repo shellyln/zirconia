@@ -2,14 +2,14 @@
 // license: MIT
 // https://github.com/shellyln
 
-public with sharing class ZrO2VfListReportControllerExt {
+global with sharing class ZrO2VfListReportControllerExt {
     ApexPages.StandardSetController setCon;
 
-    public ZrO2VfListReportControllerExt(ApexPages.StandardSetController controller) {
+    global ZrO2VfListReportControllerExt(ApexPages.StandardSetController controller) {
         setCon = controller;
     }
 
-    public string AllRecordsJSON {
+    global string AllRecordsJSON {
         get {
             JSONGenerator gen = JSON.createGenerator(true);
             gen.writeStartObject();
@@ -21,7 +21,7 @@ public with sharing class ZrO2VfListReportControllerExt {
         }
     }
 
-    public string SelectedRecordsJSON {
+    global string SelectedRecordsJSON {
         get {
             JSONGenerator gen = JSON.createGenerator(true);
             gen.writeStartObject();
