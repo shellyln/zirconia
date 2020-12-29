@@ -33,11 +33,25 @@ global with sharing class ZrO2ReportRendererController {
         return flds;
     }
 
+    private static String[] getAllFieldsIfFieldsIsNull(Schema.DescribeSobjectResult dsr, String[] fields) {
+        if (fields == null) {
+            fields = new String[]{};
+            for (Schema.SObjectField sof : dsr.fields.getMap().values()) {
+                if (sof.getDescribe().isAccessible()) {
+                    fields.add(sof.getDescribe().getName());
+                }
+            }
+        }
+        return fields;
+    }
+
     @TestVisible
     private static SObject getRecordById(String objectApiName, String[] fields, Id id) {
         String flds = '';
 
         Schema.DescribeSobjectResult[] describes = Schema.describeSObjects(new String[]{ objectApiName });
+
+        fields = getAllFieldsIfFieldsIsNull(describes[0], fields);
 
         for (Integer i = 0; i < fields.size(); i++) {
             DescribeFieldResult dfr = describes[0].fields.getMap().get(fields[i]).getDescribe();
@@ -68,6 +82,8 @@ global with sharing class ZrO2ReportRendererController {
         String flds = '';
 
         Schema.DescribeSobjectResult[] describes = Schema.describeSObjects(new String[]{ objectApiName });
+
+        fields = getAllFieldsIfFieldsIsNull(describes[0], fields);
 
         for (Integer i = 0; i < fields.size(); i++) {
             DescribeFieldResult dfr = describes[0].fields.getMap().get(fields[i]).getDescribe();
