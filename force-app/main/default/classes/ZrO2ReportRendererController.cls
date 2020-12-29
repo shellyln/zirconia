@@ -7,16 +7,55 @@ global with sharing class ZrO2ReportRendererController {
     }
 
     @TestVisible
-    private static SObject getRecordById(String objectApiName, String[] fields, Id id){
+    private static String getDefaultFields() {
         String flds = '';
-        for (Integer i = 0; i < fields.size(); i++) {
-            if (i != 0) {
-                flds += ',';
+
+        Schema.DescribeSobjectResult[] describes = Schema.describeSObjects(new String[]{ 'User' });
+        Boolean userIdIsAccessible = describes[0].fields.getMap().get('Id').getDescribe().isAccessible();
+        Boolean userNameIsAccessible = describes[0].fields.getMap().get('Name').getDescribe().isAccessible();
+
+        for (String f : new String[]{ 'CreatedBy', 'LastModifiedBy', 'Owner' }) {
+            // NOTE: It cannot get the `DescribeFieldResult` for {'CreatedBy', 'LastModifiedBy', 'Owner'} .
+            if (userIdIsAccessible) {
+                if (flds != '') {
+                    flds += ',';
+                }
+                flds += f + '.Id';
             }
-            flds += String.escapeSingleQuotes(fields[i]);
+            if (userNameIsAccessible) {
+                if (flds != '') {
+                    flds += ',';
+                }
+                flds += f + '.Name';
+            }
         }
+
+        return flds;
+    }
+
+    @TestVisible
+    private static SObject getRecordById(String objectApiName, String[] fields, Id id) {
+        String flds = '';
+
+        Schema.DescribeSobjectResult[] describes = Schema.describeSObjects(new String[]{ objectApiName });
+
+        for (Integer i = 0; i < fields.size(); i++) {
+            DescribeFieldResult dfr = describes[0].fields.getMap().get(fields[i]).getDescribe();
+            if (dfr.isAccessible()) {
+                if (flds != '') {
+                    flds += ',';
+                }
+                flds += String.escapeSingleQuotes(fields[i]);
+            }
+        }
+
+        String defaultFields = getDefaultFields();
+        if (flds != '' && defaultFields != '') {
+            defaultFields = ',' + defaultFields;
+        }
+
         return (SObject)(Database.query(
-            'select ' + flds + ',CreatedBy.Id,CreatedBy.Name,LastModifiedBy.Id,LastModifiedBy.Name,Owner.Id,Owner.Name ' +
+            'select ' + flds + defaultFields + ' ' +
             'from ' + String.escapeSingleQuotes(objectApiName) +
             ' where Id=\'' + String.escapeSingleQuotes(id) + '\' limit 1')[0]);
     }
@@ -27,14 +66,26 @@ global with sharing class ZrO2ReportRendererController {
             Integer offset, Integer recordsInPage) {
 
         String flds = '';
+
+        Schema.DescribeSobjectResult[] describes = Schema.describeSObjects(new String[]{ objectApiName });
+
         for (Integer i = 0; i < fields.size(); i++) {
-            if (i != 0) {
-                flds += ',';
+            DescribeFieldResult dfr = describes[0].fields.getMap().get(fields[i]).getDescribe();
+            if (dfr.isAccessible()) {
+                if (flds != '') {
+                    flds += ',';
+                }
             }
             flds += String.escapeSingleQuotes(fields[i]);
         }
+
+        String defaultFields = getDefaultFields();
+        if (flds != '' && defaultFields != '') {
+            defaultFields = ',' + defaultFields;
+        }
+
         return (SObject[])(Database.query(
-            'select ' + flds + ',CreatedBy.Id,CreatedBy.Name,LastModifiedBy.Id,LastModifiedBy.Name,Owner.Id,Owner.Name ' +
+            'select ' + flds + defaultFields + ' ' +
             'from ' + String.escapeSingleQuotes(objectApiName) + ' ' +
             (whereCondition != null && whereCondition.trim() != ''
                 ? 'where ' + whereCondition + ' '
