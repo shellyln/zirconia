@@ -11,11 +11,11 @@
             var message = event.getParams();
             component.find('childlwc')
             .renderReport(message['reportDef'], JSON.parse(message['data']), {
+                title: message['title'],
+                reportName: message['reportName'],
                 commands: message['commands'].split(','),
                 recordId: message['recordId'],
                 objectApiName: message['objectApiName'],
-                title: message['title'],
-                reportName: message['reportName'],
                 inputFormat: message['inputFormat'],
                 rawInput: Boolean(message['rawInput']),
                 dataFormat: 'object'

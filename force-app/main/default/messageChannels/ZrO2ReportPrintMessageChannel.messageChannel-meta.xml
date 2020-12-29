@@ -9,6 +9,12 @@
         <fieldName>data</fieldName>
     </lightningMessageFields>
     <lightningMessageFields>
+        <fieldName>title</fieldName>
+    </lightningMessageFields>
+    <lightningMessageFields>
+        <fieldName>reportName</fieldName>
+    </lightningMessageFields>
+    <lightningMessageFields>
         <fieldName>commands</fieldName>
     </lightningMessageFields>
     <lightningMessageFields>
@@ -16,12 +22,6 @@
     </lightningMessageFields>
     <lightningMessageFields>
         <fieldName>objectApiName</fieldName>
-    </lightningMessageFields>
-    <lightningMessageFields>
-        <fieldName>title</fieldName>
-    </lightningMessageFields>
-    <lightningMessageFields>
-        <fieldName>reportName</fieldName>
     </lightningMessageFields>
     <lightningMessageFields>
         <fieldName>inputFormat</fieldName>

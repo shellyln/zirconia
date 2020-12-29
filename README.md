@@ -108,7 +108,7 @@ See [https://github.com/shellyln/liyad#what-is-lsx](https://github.com/shellyln/
       ```
         * Turn on the `Scripting` switch
 
-* [MDNE Desktop app](https://github.com/shellyln/mdne) ([for Node.js+Chrome](https://github.com/shellyln/mdne)), ([Electron standalone app](https://github.com/shellyln/mdne-electron))
+* [MDNE Desktop app](https://github.com/shellyln/mdne-electron) ([Electron standalone app](https://github.com/shellyln/mdne-electron)), ([for Node.js+Chrome](https://github.com/shellyln/mdne)),
     * `path/to/report-def.md`
       ```md
       %%%($=for $data """
