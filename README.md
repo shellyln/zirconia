@@ -132,7 +132,7 @@ git checkout -b my-package-releases
 
 # Authorize a Dev-Hub org (if you haven't already done).
 sfdx force:auth:web:login \
-    --setdefaultdevhubusername
+    --setdefaultdevhubusername \
     --setalias my-hub-org
 
 sfdx force:org:create \
@@ -140,6 +140,10 @@ sfdx force:org:create \
     --setalias ZirconiaOrg \
     --durationdays 30 \
     --setdefaultusername
+
+sfdx force:alias:list
+sfdx force:org:list
+
 npm install
 
 sfdx force:source:push
